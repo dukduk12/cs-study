@@ -114,3 +114,14 @@
 2. **에러 바디(Error Body)의 친절함**: 400 에러를 줄 때 단순히 코드만 주지 말고, `{"code": "INVALID_EMAIL", "message": "이메일 형식이 잘못되었습니다"}`처럼 구체적으로 알려줘야 함.
 3. **Soft Delete vs Hard Delete**: DELETE 메서드 시 진짜 데이터를 지울지(Hard), `is_deleted` 필드만 바꿀지(Soft) 팀 내 전략을 명확히.
 ---
+### Suppl. API 설계 시 단계별 고려 사항
+| 단계 | 사고 과정| 하드웨어/DB 관점 이유 | 관련 기술 / 키워드|
+| -- | -- | --- | -- |
+| **1. 진입로 방어** | "이 요청을 보낸 놈이 공격자인가? 너무 많이 보내진 않나?"  | CPU 인터럽트 폭주 방지, 네트워크 대역폭 보호 | Rate Limiting, WAF, API Gateway  |
+| **2. 신분 확인**  | "이 사람이 '누구'인지 서버가 기억해야 하나? (Stateful vs Stateless)" | 서버 RAM 자원 효율화, 여러 서버로 수평 확장 용이  | Session (RAM), JWT (CPU 연산 기반 토큰) |
+| **3. 중복 체크**  | "네트워크가 끊겨서 똑같은 요청이 또 오면 어떡하지?" | DB 데이터 무결성 보호, 중복 결제 방지  | Idempotency Key, Redis, Unique Key |
+| **4. 데이터 접근** | "DB에서 데이터를 어떻게 가져올까? JOIN이 너무 많진 않나?" | Disk I/O 최소화, DB 서버 Lock 최소화    | Indexing, Cursor Pagination, Query Tuning |
+| **5. 캐시 판별**  | "이거 꼭 DB까지 가야 해? 아까 준 거랑 똑같은데?" | DB 부담 감소, 응답 속도 극대화  | ETag, Redis Cache, Cache-Control  |
+| **6. 결과 반환**  | "클라이언트가 이 결과를 어떻게 해석하게 할까?" | 표준화된 통신으로 클라이언트-서버 커뮤니케이션 비용 절감 | HTTP Status Code (201, 409, 422 등) |
+| **7. 뒷정리**    | "진짜 지울까? 아니면 지웠다고 표시만 할까?"| 데이터 복구 가능성 확보, 통계 일관성 유지 | Soft Delete (`is_deleted`), Hard Delete   |
+---
