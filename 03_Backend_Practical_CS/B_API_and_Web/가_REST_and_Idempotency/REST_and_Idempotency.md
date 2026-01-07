@@ -1,5 +1,5 @@
 ## 📖 REST & Idempotency
-> REST는 단순 URL 규칙이 아니라, 웹의 분산 아키텍처를 위한 **6가지 제약 조건(Architectural Constraints)**과 HTTP 기반 설계 원칙을 포함한 아키텍처 스타일
+> REST는 단순 URL 규칙이 아니라, 웹의 분산 아키텍처를 위한 `6가지 제약 조건(Architectural Constraints)`과 HTTP 기반 설계 원칙을 포함한 아키텍처 스타일
 
 ---
 ### 1. REST의 6가지 원칙 (Architectural Constraints)
